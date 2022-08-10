@@ -10,9 +10,15 @@ operatorButtons.forEach(button => button.addEventListener('click', displayOperat
 let operator = '';
 let num1 = '';
 let num2 = '';
+let needToReset = false;
 
 function displayNumber(e) {
     if(resultDisplay.innerHTML === '0') resultDisplay.innerHTML = '';
+
+    if(operationPara.innerHTML !== "" && needToReset === true) {
+        resultDisplay.innerHTML = '';
+        needToReset = false;
+    }
 
     resultDisplay.innerHTML += e.currentTarget.innerHTML;
 }
@@ -20,8 +26,8 @@ function displayNumber(e) {
 function displayOperator(e) {
     operator = e.currentTarget.innerHTML;
     num1 = resultDisplay.innerHTML;
-    console.log(operator)
     operationPara.innerHTML = `${num1} ${operator}`
+    needToReset = true;
 }
 
 
