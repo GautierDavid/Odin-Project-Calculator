@@ -1,11 +1,14 @@
 const operatorButtons = document.querySelectorAll('[data-type="operator"]');
 const numberButtons = document.querySelectorAll('[data-type="number"]');
+const deleteButton = document.querySelector('[data-type="delete"]');
+const resetButton = document.querySelector('[data-type="reset"]');
 const operationPara = document.querySelector('.operation');
 const resultDisplay = document.querySelector('.result');
 
-
 numberButtons.forEach(button => button.addEventListener('click', displayNumber))
 operatorButtons.forEach(button => button.addEventListener('click', displayOperator))
+deleteButton.addEventListener('click', displayOperator)
+resetButton.addEventListener('click', reset)
 
 let operator1 = '';
 let operator2 = '';
@@ -14,8 +17,9 @@ let num2 = '';
 let result = '';
 let needToReset = false;
 
+
+
 function displayNumber(e) {
-    console.log(result)
     if(resultDisplay.innerHTML === '0') resultDisplay.innerHTML = '';
 
     if(operationPara.innerHTML !== "" && needToReset === true) {
@@ -25,6 +29,20 @@ function displayNumber(e) {
 
     resultDisplay.innerHTML += e.currentTarget.innerHTML;
 }
+
+
+function reset() {
+    operator1 = '';
+    operator2 = '';
+    num1 = '';
+    num2 = '';
+    result = '';
+    needToReset = false;
+
+    operationPara.innerHTML = ''
+    resultDisplay.innerHTML = 0;
+}
+
 
 function displayOperator(e) {
     if(operator1 !== '') {
@@ -41,7 +59,6 @@ function displayOperator(e) {
             operationPara.innerHTML = `${num1} ${operator1}`
             needToReset = true;
         }
-    
     }    
 }
 
@@ -49,25 +66,29 @@ function displayOperator(e) {
 function setOperator(operator) {
     num2 = resultDisplay.innerHTML;
     operator2 = operator;
-    let result = operate(operator1, num1, num2)
-
-    if(operator2 === '=') {
-        operationPara.innerHTML =  `${num1} ${operator1} ${num2} ${operator2}`
+    
+    if(operator1 === '/' && (num1 === "0" || num2 === "0")) {
+        alert('You can\'t divide by 0!');
+        reset();
     } else {
-        operator1 = operator2;
-        num1 = result;
-        operationPara.innerHTML = `${num1} ${operator1}`
+        let result = operate(operator1, num1, num2)
+
+        if(operator2 === '=') {
+            operationPara.innerHTML =  `${num1} ${operator1} ${num2} ${operator2}`
+        } else {
+            operator1 = operator2;
+            num1 = result;
+            operationPara.innerHTML = `${num1} ${operator1}`
+        }
+
+        
+        operator2 = '';
+        resultDisplay.innerHTML = result;
+
+        needToReset = true;
     }
-
-    operator2 = '';
-    resultDisplay.innerHTML = result;
-
-    needToReset = true;
+    
 }
-
-
-
-
 
 
 function operate(operator, num1, num2) {
