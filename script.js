@@ -11,9 +11,11 @@ let operator1 = '';
 let operator2 = '';
 let num1 = '';
 let num2 = '';
+let result = '';
 let needToReset = false;
 
 function displayNumber(e) {
+    console.log(result)
     if(resultDisplay.innerHTML === '0') resultDisplay.innerHTML = '';
 
     if(operationPara.innerHTML !== "" && needToReset === true) {
@@ -28,10 +30,18 @@ function displayOperator(e) {
     if(operator1 !== '') {
         setOperator(e.currentTarget.innerHTML)
     } else {
-    operator1 = e.currentTarget.innerHTML;
-    num1 = resultDisplay.innerHTML;
-    operationPara.innerHTML = `${num1} ${operator1}`
-    needToReset = true;
+        if(result !== '') {
+            num1 = result;
+            operator1 = e.currentTarget.innerHTML;
+            operationPara.innerHTML = `${num1} ${operator1}`
+            needToReset = true;
+        } else {
+            operator1 = e.currentTarget.innerHTML;
+            num1 = resultDisplay.innerHTML;
+            operationPara.innerHTML = `${num1} ${operator1}`
+            needToReset = true;
+        }
+    
     }    
 }
 
@@ -39,14 +49,20 @@ function displayOperator(e) {
 function setOperator(operator) {
     num2 = resultDisplay.innerHTML;
     operator2 = operator;
-    console.log(num2, operator2)
     let result = operate(operator1, num1, num2)
 
     if(operator2 === '=') {
         operationPara.innerHTML =  `${num1} ${operator1} ${num2} ${operator2}`
+    } else {
+        operator1 = operator2;
+        num1 = result;
+        operationPara.innerHTML = `${num1} ${operator1}`
     }
+
+    operator2 = '';
     resultDisplay.innerHTML = result;
 
+    needToReset = true;
 }
 
 
@@ -78,12 +94,12 @@ const subtract = function(a, b) {
 	return a - b
 };
 
-const multiply = function(...args) {
-  return args[0].reduce((a, b) =>  a *  b);
+const multiply = function(a, b) {
+  return  a *  b;
 };
 
-const divide = function(...args) {
-    return args[0].reduce((a, b) => a / b); 
+const divide = function(a, b) {
+    return a / b; 
 }
 
 
