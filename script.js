@@ -7,7 +7,8 @@ const resultDisplay = document.querySelector('.result');
 numberButtons.forEach(button => button.addEventListener('click', displayNumber))
 operatorButtons.forEach(button => button.addEventListener('click', displayOperator))
 
-let operator = '';
+let operator1 = '';
+let operator2 = '';
 let num1 = '';
 let num2 = '';
 let needToReset = false;
@@ -24,10 +25,28 @@ function displayNumber(e) {
 }
 
 function displayOperator(e) {
-    operator = e.currentTarget.innerHTML;
+    if(operator1 !== '') {
+        setOperator(e.currentTarget.innerHTML)
+    } else {
+    operator1 = e.currentTarget.innerHTML;
     num1 = resultDisplay.innerHTML;
-    operationPara.innerHTML = `${num1} ${operator}`
+    operationPara.innerHTML = `${num1} ${operator1}`
     needToReset = true;
+    }    
+}
+
+
+function setOperator(operator) {
+    num2 = resultDisplay.innerHTML;
+    operator2 = operator;
+    console.log(num2, operator2)
+    let result = operate(operator1, num1, num2)
+
+    if(operator2 === '=') {
+        operationPara.innerHTML =  `${num1} ${operator1} ${num2} ${operator2}`
+    }
+    resultDisplay.innerHTML = result;
+
 }
 
 
@@ -35,9 +54,9 @@ function displayOperator(e) {
 
 
 
-
-
-const operate = function(operator, num1, num2) {
+function operate(operator, num1, num2) {
+    num1 = Number(num1);
+    num2 = Number(num2);
     switch(operator) {
         case "+":
             return add(num1, num2);
