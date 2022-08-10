@@ -1,0 +1,63 @@
+:root {
+    margin: 0;
+    font-size: 10px;
+    font-family: sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+
+    background-color: black;
+    color: orange;
+    width: 400px;
+    margin-inline: auto;
+    padding: 2rem;
+
+    border-radius: 20px;
+}
+
+.display-container {
+    background-color: gray;
+    padding-block: 1.5rem;
+    padding-right: 2rem;
+    font-size: 2.5rem;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+.display-container p:first-child {
+    padding-right: 3rem;
+    font-size: 1.8rem;
+}
+
+
+.button-wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+
+    margin-top: 2rem;
+}
+
+.button {
+    font-size: 2.5rem;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+}
+.button:hover {
+    outline: 1px orange solid;
+}
+
+.white {
+    color: white;
+}
+
+p {
+    margin: 0;
+}

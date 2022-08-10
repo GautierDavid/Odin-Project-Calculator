@@ -1,3 +1,25 @@
+const operatorButtons = document.querySelectorAll('[data-type="operator"]');
+const numberButtons = document.querySelectorAll('[data-type="number"]');
+const operationPara = document.querySelector('.operation');
+const resultDisplay = document.querySelector('.result');
+
+console.log(operatorButtons, numberButtons)
+
+let operator = '';
+
+const displayNumber = function(e) {
+    if(resultDisplay.innerHTML === '0') resultDisplay.innerHTML = '';
+
+    resultDisplay.innerHTML += e.currentTarget.innerHTML;
+}
+
+
+
+
+
+
+
+
 const operate = function(operator, num1, num2) {
     switch(operator) {
         case "+":
@@ -14,9 +36,6 @@ const operate = function(operator, num1, num2) {
             break;
         case "/":
             divide(num1, num2);
-            break;
-        case "+":
-            add(num1, num2);
             break;
     }
 }
@@ -56,3 +75,6 @@ const factorial = function(num) {
   }
   return num
 };
+
+
+numberButtons.forEach(button => button.addEventListener('click', displayNumber))
