@@ -61,3 +61,7 @@
 p {
     margin: 0;
 }
+
+.operation {
+    min-height: 2.5rem;
+}
