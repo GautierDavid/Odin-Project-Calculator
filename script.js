@@ -45,6 +45,9 @@ function reset() {
 
 
 function displayOperator(e) {
+    // in case the user click on = for the first operator
+    if(operator1 === "" && e.currentTarget.innerHTML === "=") return
+
     if(operator1 !== '') {
         setOperator(e.currentTarget.innerHTML)
     } else {
