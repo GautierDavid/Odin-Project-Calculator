@@ -74,8 +74,11 @@ function setOperator(operator) {
         alert('You can\'t divide by 0!');
         reset();
     } else {
-        let result = operate(operator1, num1, num2)
+        let result = operate(operator1, num1, num2);
 
+        // if result is a decimal, round to two decimals
+        if(result % 1 !== 0) result = result.toFixed(2);
+        
         if(operator2 === '=') {
             operationPara.innerHTML =  `${num1} ${operator1} ${num2} ${operator2}`
         } else {
