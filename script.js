@@ -15,6 +15,7 @@ let operator2 = '';
 let num1 = '';
 let num2 = '';
 let result = '';
+let needToReset = false
 
 function deleteNumber() {
     let display = resultDisplay.innerHTML;
@@ -25,6 +26,7 @@ function deleteNumber() {
 }
 
 function displayNumber(e) {
+    if(needToReset) reset();
     // reset at the start
     if(resultDisplay.innerHTML === '0') resultDisplay.innerHTML = '';
     // reset si on a le premier operateur et que num2 est vide
@@ -50,6 +52,7 @@ function setNumber(num) {
 
 
 function displayOperator(e) {
+    needToReset = false;
     // in case the user click on = for the first operator
     if(num2 === "" && e.currentTarget.innerHTML === "=") return
     // si clique sur operateur sans avoir rentré de chiffres
@@ -86,6 +89,7 @@ function setOperator() {
         operationPara.innerHTML =  `${num1} ${operator1} ${num2} ${operator2}`
         num1 = result;
         operator1 = '';
+        needToReset = true;
     } else {
         operator1 = operator2;
         num1 = result;
@@ -122,6 +126,8 @@ function reset() {
     num2 = '';
     operationPara.innerHTML = ''
     resultDisplay.innerHTML = 0;
+
+    needToReset = false
 }
 
 
