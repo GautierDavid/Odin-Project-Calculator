@@ -17,15 +17,19 @@ let num2 = '';
 let result = '';
 let needToReset = false
 
+
 function deleteNumber() {
     let display = resultDisplay.innerHTML;
     if(display.length <= 1) resultDisplay.innerHTML = "0";
+    // supprime le dernier charactères de l'affichage
     else resultDisplay.innerHTML = display.slice(0, display.length-1);
     
     setNumber(resultDisplay.innerHTML)
 }
 
 function displayNumber(e) {
+    // si vrai appel la fonction reset 
+    // dans le cas où un chiffre est cliqué après une opération se terminant par un égal
     if(needToReset) reset();
     // reset at the start
     if(resultDisplay.innerHTML === '0') resultDisplay.innerHTML = '';
@@ -36,7 +40,6 @@ function displayNumber(e) {
     resultDisplay.innerHTML += e.currentTarget.innerHTML;
     // appel fonction setNumber pour attribuer les valeurs
     setNumber(resultDisplay.innerHTML)
-    console.log(operator2)
 }
 
 function setNumber(num) {
@@ -78,9 +81,11 @@ function setOperator() {
     if(operator1 === '/' && (num1 === "0" || num2 === "0")) {
         // message d'erreur
         alert('You can\'t divide by 0!');
+        // sort de la fonction
         return
     } 
 
+    // appel la fonction pour obtenir le résultat de l'opération
     let result = operate(operator1, num1, num2);
 
     // if result is a decimal, round to two decimals
@@ -89,6 +94,8 @@ function setOperator() {
         operationPara.innerHTML =  `${num1} ${operator1} ${num2} ${operator2}`
         num1 = result;
         operator1 = '';
+
+        // pour gérer les conditions du reset
         needToReset = true;
     } else {
         operator1 = operator2;

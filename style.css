@@ -50,9 +50,14 @@
     text-align: center;
     cursor: pointer;
 }
-.button:hover {
+.button[data-type="number"]:hover {
     outline: 1px orange solid;
+    background-color: orange;
 }
+.button[data-type="operator"]:hover,  [data-type="reset"]:hover, [data-type="delete"]:hover{
+    background-color: white;
+}
+
 
 .white {
     color: white;
