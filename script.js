@@ -7,7 +7,7 @@ const resultDisplay = document.querySelector('.result');
 
 numberButtons.forEach(button => button.addEventListener('click', displayNumber))
 operatorButtons.forEach(button => button.addEventListener('click', displayOperator))
-deleteButton.addEventListener('click', displayOperator)
+deleteButton.addEventListener('click', deleteNumber)
 resetButton.addEventListener('click', reset)
 
 let operator1 = '';
@@ -16,7 +16,13 @@ let num1 = '';
 let num2 = '';
 let result = '';
 
-
+function deleteNumber() {
+    let display = resultDisplay.innerHTML;
+    if(display.length <= 1) resultDisplay.innerHTML = "0";
+    else resultDisplay.innerHTML = display.slice(0, display.length-1);
+    
+    setNumber(resultDisplay.innerHTML)
+}
 
 function displayNumber(e) {
     // reset at the start
@@ -43,6 +49,7 @@ function setNumber(num) {
 
 
 function displayOperator(e) {
+    console.log(num2)
     // in case the user click on = for the first operator
     if(num2 === "" && e.currentTarget.innerHTML === "=") return
     // si clique sur operateur sans avoir rentré de chiffres
