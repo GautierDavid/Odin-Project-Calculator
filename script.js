@@ -34,6 +34,7 @@ function displayNumber(e) {
     resultDisplay.innerHTML += e.currentTarget.innerHTML;
     // appel fonction setNumber pour attribuer les valeurs
     setNumber(resultDisplay.innerHTML)
+    console.log(operator2)
 }
 
 function setNumber(num) {
@@ -49,7 +50,6 @@ function setNumber(num) {
 
 
 function displayOperator(e) {
-    console.log(num2)
     // in case the user click on = for the first operator
     if(num2 === "" && e.currentTarget.innerHTML === "=") return
     // si clique sur operateur sans avoir rentré de chiffres
@@ -82,17 +82,17 @@ function setOperator() {
 
     // if result is a decimal, round to two decimals
     if(result % 1 !== 0) result = result.toFixed(2);
-    console.log(operator2)
     if(operator2 === '=') {
         operationPara.innerHTML =  `${num1} ${operator1} ${num2} ${operator2}`
         num1 = result;
+        operator1 = '';
     } else {
-        console.log("hi")
         operator1 = operator2;
         num1 = result;
         operationPara.innerHTML = `${num1} ${operator1}`
     }
 
+    console.log(operator2)
     num2 = '';
     resultDisplay.innerHTML = num1;
 }
