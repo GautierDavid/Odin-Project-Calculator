@@ -28,15 +28,3 @@ const factorial = function(num) {
   }
   return num
 };
-
-
-
-
-module.exports = {
-    add,
-    subtract,
-    sum,
-    multiply,
-    power,
-    factorial
-  };

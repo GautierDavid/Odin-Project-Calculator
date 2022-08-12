@@ -2,7 +2,7 @@ const operatorButtons = document.querySelectorAll('[data-type="operator"]');
 const numberButtons = document.querySelectorAll('[data-type="number"]');
 const deleteButton = document.querySelector('[data-type="delete"]');
 const resetButton = document.querySelector('[data-type="reset"]');
-const operationPara = document.querySelector('.operation');
+const operationDisplay = document.querySelector('.operation');
 const resultDisplay = document.querySelector('.result');
 
 
@@ -11,12 +11,118 @@ operatorButtons.forEach(button => button.addEventListener('click', displayOperat
 deleteButton.addEventListener('click', deleteNumber)
 resetButton.addEventListener('click', reset)
 
-let operator1 = '';
-let operator2 = '';
-let num1 = '';
-let num2 = '';
+
+let firstOperator = '';
+let secondOperator = '';
+let firstNumber = '';
+let secondNumber = '';
 let result = '';
 let needToReset = false
+
+
+
+function displayNumber(e) {
+    // empêche de mettre plusieurs virgules dans le même nombre
+    if(/[.]/.test(resultDisplay.innerHTML) && e.currentTarget.innerHTML === ".") return
+    // si vrai appel la fonction reset 
+    // dans le cas où un chiffre est cliqué après une opération se terminant par un égal
+    if(needToReset) reset();
+    // reset at the start
+    if(resultDisplay.innerHTML === '0') resultDisplay.innerHTML = '';
+    // reset si on a le premier operateur et que secondNumber est vide
+    else if (firstOperator !== "" && secondNumber === "") resultDisplay.innerHTML = '';
+
+    // si le premier nombre est un . 
+    if(resultDisplay.innerHTML === '' && e.currentTarget.innerHTML === '.') resultDisplay.innerHTML = "0"+e.currentTarget.innerHTML;
+    else resultDisplay.innerHTML += e.currentTarget.innerHTML;
+    // appel fonction setNumber pour attribuer les valeurs
+    setNumber(resultDisplay.innerHTML)
+}
+
+function setNumber(num) {
+    // s'il n'y a pas de premier operator
+    if(firstOperator === "") {
+        // firstNumber égal ce qui est affiché dans la div result
+        firstNumber = num;
+    } else {
+        // s'il y a un premier operator secondNumber égal ce qui est affiché dans la div result
+        secondNumber = num;
+    }
+}
+
+
+
+function displayOperator(e) {
+    needToReset = false;
+    // in case the user click on = for the first operator
+    if(secondNumber === "" && e.currentTarget.innerHTML === "=") return
+    // si clique sur operateur sans avoir rentré de chiffres
+    if(firstNumber === "") return
+
+    // si firstNumber different vide et firstOperator est vide OU secondNumber vide
+    if((firstOperator === "" && firstNumber !== "") || secondNumber === "") {
+        // => firstOperator égale bouton sur lequel on a cliqué
+        firstOperator = e.currentTarget.innerHTML;
+        operationDisplay.innerHTML = `${firstNumber} ${firstOperator}`;
+    // si secondNumber différent vide
+    } else if(secondNumber !== "") {
+        // => secondOperator égale bouton sur lequel on a cliqué
+        secondOperator = e.currentTarget.innerHTML;
+        // appel la fonction pour préparer le calcul
+        setOperator();
+    }
+}
+
+function setOperator() {
+    // si essaye de diviser par 0
+    if(firstOperator === '/' && (firstNumber === "0" || secondNumber === "0")) {
+        // message d'erreur
+        alert('You can\'t divide by 0!');
+        // sort de la fonction
+        return
+    } 
+
+    // appel la fonction pour obtenir le résultat de l'opération
+    let result = operate(firstOperator, firstNumber, secondNumber);
+
+    // if result is a decimal, round to two decimals
+    if(result % 1 !== 0) result = result.toFixed(2);
+    if(secondOperator === '=') {
+        operationDisplay.innerHTML =  `${firstNumber} ${firstOperator} ${secondNumber} ${secondOperator}`
+        firstNumber = result;
+        firstOperator = '';
+
+        // pour gérer les conditions du reset
+        needToReset = true;
+    } else {
+        firstOperator = secondOperator;
+        firstNumber = result;
+        operationDisplay.innerHTML = `${firstNumber} ${firstOperator}`
+    }
+
+    console.log(secondOperator)
+    secondNumber = '';
+    resultDisplay.innerHTML = firstNumber;
+}
+
+
+
+function operate(operator, firstNumber, secondNumber) {
+    // translate string to number 
+    firstNumber = Number(firstNumber);
+    secondNumber = Number(secondNumber);
+    switch(operator) {
+        case "+":
+            return add(firstNumber, secondNumber);
+        case "-":
+            return subtract(firstNumber, secondNumber);
+        case "x":
+            return multiply(firstNumber, secondNumber);
+        case "/":
+            return divide(firstNumber, secondNumber);
+    }
+}
+
 
 
 function deleteNumber() {
@@ -28,119 +134,16 @@ function deleteNumber() {
     setNumber(resultDisplay.innerHTML)
 }
 
-function displayNumber(e) {
-    // empêche de mettre plusieurs virgules dans le même nombre
-    if(/[.]/.test(resultDisplay.innerHTML) && e.currentTarget.innerHTML === ".") return
-    // si vrai appel la fonction reset 
-    // dans le cas où un chiffre est cliqué après une opération se terminant par un égal
-    if(needToReset) reset();
-    // reset at the start
-    if(resultDisplay.innerHTML === '0') resultDisplay.innerHTML = '';
-    // reset si on a le premier operateur et que num2 est vide
-    else if (operator1 !== "" && num2 === "") resultDisplay.innerHTML = '';
-
-    // si le premier nombre est un . 
-    if(resultDisplay.innerHTML === '' && e.currentTarget.innerHTML === '.') resultDisplay.innerHTML = "0"+e.currentTarget.innerHTML;
-    else resultDisplay.innerHTML += e.currentTarget.innerHTML;
-    // appel fonction setNumber pour attribuer les valeurs
-    setNumber(resultDisplay.innerHTML)
-}
-
-function setNumber(num) {
-    // s'il n'y a pas de premier operator
-    if(operator1 === "") {
-        // num1 égal ce qui est affiché dans la div result
-        num1 = num;
-    } else {
-        // s'il y a un premier operator num2 égal ce qui est affiché dans la div result
-        num2 = num;
-    }
-}
-
-
-function displayOperator(e) {
-    needToReset = false;
-    // in case the user click on = for the first operator
-    if(num2 === "" && e.currentTarget.innerHTML === "=") return
-    // si clique sur operateur sans avoir rentré de chiffres
-    if(num1 === "") return
-
-    // si num1 different vide et operator1 est vide OU num2 vide
-    if((operator1 === "" && num1 !== "") || num2 === "") {
-        // => operator1 égale bouton sur lequel on a cliqué
-        operator1 = e.currentTarget.innerHTML;
-        operationPara.innerHTML = `${num1} ${operator1}`;
-    // si num2 différent vide
-    } else if(num2 !== "") {
-        // => operator2 égale bouton sur lequel on a cliqué
-        operator2 = e.currentTarget.innerHTML;
-        // appel la fonction pour préparer le calcul
-        setOperator();
-    }
-}
-
-
-function setOperator() {
-    // si essaye de diviser par 0
-    if(operator1 === '/' && (num1 === "0" || num2 === "0")) {
-        // message d'erreur
-        alert('You can\'t divide by 0!');
-        // sort de la fonction
-        return
-    } 
-
-    // appel la fonction pour obtenir le résultat de l'opération
-    let result = operate(operator1, num1, num2);
-
-    // if result is a decimal, round to two decimals
-    if(result % 1 !== 0) result = result.toFixed(2);
-    if(operator2 === '=') {
-        operationPara.innerHTML =  `${num1} ${operator1} ${num2} ${operator2}`
-        num1 = result;
-        operator1 = '';
-
-        // pour gérer les conditions du reset
-        needToReset = true;
-    } else {
-        operator1 = operator2;
-        num1 = result;
-        operationPara.innerHTML = `${num1} ${operator1}`
-    }
-
-    console.log(operator2)
-    num2 = '';
-    resultDisplay.innerHTML = num1;
-}
-
-
-function operate(operator, num1, num2) {
-    // translate string to number 
-    num1 = Number(num1);
-    num2 = Number(num2);
-    switch(operator) {
-        case "+":
-            return add(num1, num2);
-        case "-":
-            return subtract(num1, num2);
-        case "x":
-            return multiply(num1, num2);
-        case "/":
-            return divide(num1, num2);
-    }
-}
-
-
 function reset() {
-    operator1 = '';
-    operator2 = '';
-    num1 = '';
-    num2 = '';
-    operationPara.innerHTML = ''
+    firstOperator = '';
+    secondOperator = '';
+    firstNumber = '';
+    secondNumber = '';
+    operationDisplay.innerHTML = ''
     resultDisplay.innerHTML = 0;
 
     needToReset = false
 }
-
 
 
 
