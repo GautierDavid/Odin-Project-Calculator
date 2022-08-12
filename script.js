@@ -5,6 +5,7 @@ const resetButton = document.querySelector('[data-type="reset"]');
 const operationPara = document.querySelector('.operation');
 const resultDisplay = document.querySelector('.result');
 
+
 numberButtons.forEach(button => button.addEventListener('click', displayNumber))
 operatorButtons.forEach(button => button.addEventListener('click', displayOperator))
 deleteButton.addEventListener('click', deleteNumber)
@@ -28,6 +29,8 @@ function deleteNumber() {
 }
 
 function displayNumber(e) {
+    // empêche de mettre plusieurs virgules dans le même nombre
+    if(/[.]/.test(resultDisplay.innerHTML) && e.currentTarget.innerHTML === ".") return
     // si vrai appel la fonction reset 
     // dans le cas où un chiffre est cliqué après une opération se terminant par un égal
     if(needToReset) reset();
@@ -36,8 +39,9 @@ function displayNumber(e) {
     // reset si on a le premier operateur et que num2 est vide
     else if (operator1 !== "" && num2 === "") resultDisplay.innerHTML = '';
 
-    // gère l'affichage
-    resultDisplay.innerHTML += e.currentTarget.innerHTML;
+    // si le premier nombre est un . 
+    if(resultDisplay.innerHTML === '' && e.currentTarget.innerHTML === '.') resultDisplay.innerHTML = "0"+e.currentTarget.innerHTML;
+    else resultDisplay.innerHTML += e.currentTarget.innerHTML;
     // appel fonction setNumber pour attribuer les valeurs
     setNumber(resultDisplay.innerHTML)
 }

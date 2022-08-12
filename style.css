@@ -49,6 +49,7 @@
     padding: 2rem;
     text-align: center;
     cursor: pointer;
+    user-select: none; /* to remove highlight on double click */
 }
 .button[data-type="number"]:hover {
     outline: 1px orange solid;
